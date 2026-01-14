@@ -1,0 +1,7 @@
+
+=== Error correction and assembling warnings:
+ * 0:01:03.875    56M / 1007M WARN    General                 (pair_info_count.cpp       : 185)   Unable to estimate insert size for paired library #0
+ * 0:01:03.876    56M / 1007M WARN    General                 (pair_info_count.cpp       : 191)   None of paired reads aligned properly. Please, check orientation of your read pairs.
+ * 0:01:03.877    56M / 1007M WARN    General                 (repeat_resolving.cpp      :  82)   Insert size was not estimated for any of the paired libraries, repeat resolution module will not run.
+ * 0:01:15.246    33M / 1007M WARN    General                 (pair_info_count.cpp       :  93)   Single reads are not used in metagenomic mode
+======= Warnings saved to /home/mikdat/Desktop/Rust/ngsproj/work/0b/a6080d66468b7c5cf865cd6e8579e9/ERR13576995_metaspades/warnings.log

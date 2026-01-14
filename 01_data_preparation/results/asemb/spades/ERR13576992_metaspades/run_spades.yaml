@@ -1,0 +1,170 @@
+- STAGE: Before start
+  args: []
+  config_dir: ''
+  del_after: []
+  job_uuid: SPAdes_Before_start_Z0RG85QW5292P08315NFWXM8PG5KN0FT
+  mpi_support: false
+  output_files: []
+  path: 'true'
+  short_name: before_start
+- STAGE: Read error correction
+  args: []
+  config_dir: ''
+  del_after: []
+  job_uuid: SPAdes_Read_error_correction_BIEBF8CQGMSE8PFNW7CTU8T5E2ZY4YMS
+  mpi_support: false
+  output_files: []
+  path: 'true'
+  short_name: ec_start
+- STAGE: Read error correction
+  args:
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/corrected/configs/config.info
+  config_dir: corrected
+  del_after:
+  - tmp/hammer_258_zb8i
+  job_uuid: SPAdes_Read_error_correction_JRP40QNJN6LQJVLDNJI9SYT6PH2PATQO
+  mpi_support: false
+  output_files:
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/corrected/corrected.yaml
+  path: /SPAdes-4.2.0-Linux/bin/spades-hammer
+  short_name: ec_runtool
+- STAGE: corrected reads compression
+  args:
+  - /SPAdes-4.2.0-Linux/share/spades/spades_pipeline/scripts/compress_all.py
+  - --input_file
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/corrected/corrected.yaml
+  - --ext_python_modules_home
+  - /SPAdes-4.2.0-Linux/share/spades
+  - --max_threads
+  - '2'
+  - --output_dir
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/corrected
+  - --gzip_output
+  config_dir: ''
+  del_after: []
+  job_uuid: SPAdes_corrected_reads_compression_OVMD9NAJ2VKLEL7EEOULCWKC47V3BK05
+  mpi_support: false
+  output_files: []
+  path: /usr/bin/python3
+  short_name: ec_compress
+- STAGE: Read error correction
+  args: []
+  config_dir: ''
+  del_after: []
+  job_uuid: SPAdes_Read_error_correction_3VTILA0O5ZK84QH3NZ54B35H9XK1N1RA
+  mpi_support: false
+  output_files: []
+  path: 'true'
+  short_name: ec_finish
+- STAGE: Assembling
+  args: []
+  config_dir: ''
+  del_after: []
+  job_uuid: SPAdes_Assembling_0V7GQZV984V8L0PMWLN6JGLWYGHZZ30E
+  mpi_support: false
+  output_files: []
+  path: 'true'
+  short_name: as_start
+- STAGE: K21
+  args:
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K21/configs/config.info
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K21/configs/mda_mode.info
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K21/configs/meta_mode.info
+  config_dir: K21
+  del_after: []
+  job_uuid: hpcSPAdes_K21_UM602DEURXNIRG4PZQ23WIWBDG0L5OH3
+  mpi_support: true
+  output_files: []
+  path: /SPAdes-4.2.0-Linux/bin/{spades_core}
+  short_name: k21
+- STAGE: K33
+  args:
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K33/configs/config.info
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K33/configs/mda_mode.info
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K33/configs/meta_mode.info
+  config_dir: K33
+  del_after: []
+  job_uuid: hpcSPAdes_K33_4G49QW9Y573LSZ7TXPYPKD1SGM1F84PV
+  mpi_support: true
+  output_files: []
+  path: /SPAdes-4.2.0-Linux/bin/{spades_core}
+  short_name: k33
+- STAGE: K55
+  args:
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/configs/config.info
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/configs/mda_mode.info
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/configs/meta_mode.info
+  config_dir: K55
+  del_after: []
+  job_uuid: hpcSPAdes_K55_FAFMNS4Y2RSZI4U1F0QVWFEZQPW6G5JZ
+  mpi_support: true
+  output_files: []
+  path: /SPAdes-4.2.0-Linux/bin/{spades_core}
+  short_name: k55
+- STAGE: Copy files
+  args:
+  - /SPAdes-4.2.0-Linux/share/spades/spades_pipeline/scripts/copy_files.py
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/before_rr.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/before_rr.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/assembly_graph_after_simplification.gfa
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/assembly_graph_after_simplification.gfa
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/final_contigs.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/contigs.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/first_pe_contigs.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/first_pe_contigs.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/strain_graph.gfa
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/strain_graph.gfa
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/scaffolds.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/scaffolds.fasta
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/scaffolds.paths
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/scaffolds.paths
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/assembly_graph_with_scaffolds.gfa
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/assembly_graph_with_scaffolds.gfa
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/assembly_graph.fastg
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/assembly_graph.fastg
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/K55/final_contigs.paths
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/contigs.paths
+  config_dir: ''
+  del_after:
+  - .bin_reads
+  - tmp/spades_e913tqyo
+  job_uuid: SPAdes_Copy_files_B5EA6NNIB3KG5YTBZFDO70OCLQRVPLK3
+  mpi_support: false
+  output_files: []
+  path: /usr/bin/python3
+  short_name: copy_files
+- STAGE: Assembling
+  args: []
+  config_dir: ''
+  del_after: []
+  job_uuid: SPAdes_Assembling_N4MNECYM8R6YQCHZ2YDX7H2NN1WUSWGL
+  mpi_support: false
+  output_files: []
+  path: 'true'
+  short_name: as_finish
+- STAGE: Breaking scaffolds
+  args:
+  - /SPAdes-4.2.0-Linux/share/spades/spades_pipeline/scripts/breaking_scaffolds_script.py
+  - --result_scaffolds_filename
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/scaffolds.fasta
+  - --misc_dir
+  - /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/misc
+  - --threshold_for_breaking_scaffolds
+  - '3'
+  config_dir: ''
+  del_after: []
+  job_uuid: SPAdes_Breaking_scaffolds_5UZEPG2IR4AMR8SUXM5NT2QAU9O2AOT7
+  mpi_support: false
+  output_files: []
+  path: /usr/bin/python3
+  short_name: bs
+- STAGE: Terminate
+  args: []
+  config_dir: ''
+  del_after:
+  - configs
+  job_uuid: SPAdes_Terminate_0L3M3XRBQBW78GXW7QNF3ER5O0NW90E8
+  mpi_support: false
+  output_files: []
+  path: 'true'
+  short_name: terminate

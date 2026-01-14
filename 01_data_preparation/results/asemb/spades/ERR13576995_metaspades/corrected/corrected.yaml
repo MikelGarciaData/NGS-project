@@ -1,0 +1,9 @@
+- "left reads":
+  - "/home/mikdat/Desktop/Rust/ngsproj/work/0b/a6080d66468b7c5cf865cd6e8579e9/ERR13576995_metaspades/corrected/ERR13576995_1_pair.fastq00.0_0.cor.fastq.gz"
+  "number": !!int "1"
+  "orientation": "fr"
+  "right reads":
+  - "/home/mikdat/Desktop/Rust/ngsproj/work/0b/a6080d66468b7c5cf865cd6e8579e9/ERR13576995_metaspades/corrected/ERR13576995_2_pair.fastq00.0_0.cor.fastq.gz"
+  "single reads":
+  - "/home/mikdat/Desktop/Rust/ngsproj/work/0b/a6080d66468b7c5cf865cd6e8579e9/ERR13576995_metaspades/corrected/ERR13576995__unpaired00.0_0.cor.fastq.gz"
+  "type": "paired-end"

@@ -1,0 +1,7 @@
+- "left reads":
+  - "/home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_1_pair.fastq.gz"
+  "number": !!int "1"
+  "orientation": "fr"
+  "right reads":
+  - "/home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_2_pair.fastq.gz"
+  "type": "paired-end"

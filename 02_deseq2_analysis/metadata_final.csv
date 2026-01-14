@@ -1,0 +1,2 @@
+sample_accession,alias,run_accession,experiment_accession,library_strategy,library_layout,instrument_model,tax_id,scientific_name,title,fastq_1,fastq_2,collection_date,geographic_location_(longitude),geographic_location_(latitude),depth,elevation,environmental_medium,local_environmental_context,project_name,broad-scale_environmental_context
+,,ERR13576985,ERX12946888,AMPLICON,paired,Illumina MiSeq,,,,run/ERR135/ERR13576985/blanco_SR_ITS_R1.fastq.gz,run/ERR135/ERR13576985/blanco_SR_ITS_R2.fastq.gz,,,,,,,,,

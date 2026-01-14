@@ -1,0 +1,37 @@
+Command line: /SPAdes-4.2.0-Linux/bin/metaspades.py	-1	/home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_1_pair.fastq.gz	-2	/home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_2_pair.fastq.gz	-o	/home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades	--threads	2	--memory	6	
+
+System information:
+  SPAdes version: 4.2.0
+  Python version: 3.10.12
+  OS: Linux-6.12.32-amd64-x86_64-with-glibc2.35
+
+Output dir: /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades
+Mode: read error correction and assembling
+Debug mode is turned OFF
+
+Dataset parameters:
+  Metagenomic mode
+  Reads:
+    Library number: 1, library type: paired-end
+      orientation: fr
+      left reads: ['/home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_1_pair.fastq.gz']
+      right reads: ['/home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_2_pair.fastq.gz']
+      interlaced reads: not specified
+      single reads: not specified
+      merged reads: not specified
+Read error correction parameters:
+  Iterations: 1
+  PHRED offset will be auto-detected
+  Corrected reads will be compressed
+Assembly parameters:
+  k: [21, 33, 55]
+  Repeat resolution is enabled
+  Mismatch careful mode is turned OFF
+  MismatchCorrector will be SKIPPED
+  Coverage cutoff is turned OFF
+  Assembly graph output will use GFA v1.2 format
+Other parameters:
+  Dir for temp files: /home/mikdat/Desktop/Rust/ngsproj/work/0c/766851e900a195b0f2e8e8111782f9/ERR13576992_metaspades/tmp
+  Threads: 2
+  Memory limit (in Gb): 6
+

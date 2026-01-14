@@ -1,0 +1,117 @@
+---
+title: "deseq analysis"
+author: "Mikel Garcia"
+format: html
+editor: visual
+---
+
+## libraries
+
+```{r}
+library(tidyverse)
+library(DESeq2)
+```
+
+
+```{r}
+read_abundance <- function(path){
+  idxstats <- read_tsv(
+  path,
+  col_names = c(
+    "contig",
+    "length_bp",
+    "mapped_reads",
+    "unmapped_reads"
+  ),
+  show_col_types = FALSE
+)
+
+}
+
+
+rpkm <- function(df, reads_col = "mapped_reads", length_col = "length_bp") {
+  
+  # Total de lecturas mapeadas
+  total_reads <- sum(df[[reads_col]])
+  
+  # Calcular RPKM
+  df <- df %>%
+    mutate(
+      RPKM = (!!sym(reads_col)) * 1e9 / ((!!sym(length_col)) * total_reads)
+    )
+  
+  return(df)
+}
+
+preprocessing <- function(tibble){
+  tibble <- tibble |>
+  separate(
+    contig,
+    into = c("node", "contig_nr", "length", "length_val", "cov", "coverage"),
+    sep = "_",
+    remove = FALSE
+  ) |> 
+    select("contig_nr", "coverage", "length_bp", "mapped_reads", "unmapped_reads") |> 
+    rpkm() |> 
+    select("contig_nr", "RPKM")
+  tibble
+}
+```
+
+
+```{r}
+# Función: unir múltiples dataframes con RPKM por contig
+merge_rpkm_dfs <- function(df_list, reads_col = "mapped_reads", length_col = "length_bp") {
+  
+  # Aplicar a todos los dataframes con su número
+  rpkm_list <- lapply(seq_along(df_list), function(i) {
+    preprocessing(df_list[[i]], i)
+  })
+  
+  # Unir todos los dataframes en uno solo (long format)
+  merged_df <- bind_rows(rpkm_list)
+  
+  
+  return(merged_df)
+}
+```
+
+
+```{r}
+tib1 <- read_abundance("data/ERR13576992.idxstats")
+tib2 <- read_abundance("data/ERR13576995.idxstats")
+
+tib1 |> mutate(ratio = length_bp/mapped_reads) |> rpkm() |> head()
+tib2 |> mutate(ratio = length_bp/mapped_reads) |> rpkm()|> head()
+```
+
+```{r}
+tib1 <- preprocessing(tib1) |> mutate(sample_nr = "sample_1")
+tib2 <- preprocessing(tib2) |> mutate(sample_nr = "sample_2")
+
+tib1 |> head()
+tib2 |> head()
+```
+
+
+```{r}
+tibs <- bind_rows(tib1, tib2)
+tibs <- tibs |> pivot_wider(names_from=sample_nr, values_from=RPKM)
+
+coldata <- data.frame(row.names = colnames(tibs),
+                      condition = rep("A", ncol(tibs)))
+```
+
+
+```{r}
+dds <- DESeqDataSetFromMatrix(
+  countData = tibs,
+  colData = coldata,
+  design = ~ condition
+)
+```
+
+```{r}
+tsv
+```
+
