@@ -1,0 +1,113 @@
+---
+title: "join files & analysis"
+author: "Mikel Garcia"
+format: html
+editor: visual
+---
+
+## 
+
+```{r}
+library(purrr)
+library(tibble)
+library(dplyr)
+library(broom)
+library(readr)
+library(stringr)
+```
+
+```{r}
+bft <- read_csv("intermediate/BFT.csv")
+taxa <- read_csv("intermediate/taxa_keys.csv")
+meta <- read_csv2("metadata_full.csv")
+bft |> head()
+taxa |> head()
+meta |> head()
+write_csv(big_tibble, file = file.path("final", paste0("Final_ds_no_metadata", ".csv")))
+```
+
+
+```{r}
+hits_with_taxa <- bft %>%
+  # Convertimos 'taxa' a numérico; los que no son números se vuelven NA
+  mutate(taxa_num = as.numeric(taxa)) %>%
+  # Hacemos el join con taxa_code
+  left_join(taxa, by = c("taxa_num" = "taxa_code"))
+
+
+hits_taxa_meta <- hits_with_taxa %>%
+  # Hacemos el join con taxa_code
+  left_join(meta, by = c("read_id" = "run_accession"))
+
+# Ver resultado
+head(hits_with_taxa)
+
+# Ver resultado
+hits_taxa_meta |> head()
+write_csv(hits_taxa_meta, file = file.path("final", paste0("final_dataset", ".csv")))
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(forcats)
+
+# Filtrar solo P o P1
+hits_plot <- hits_with_taxa %>%
+  filter(taxa_level %in% c("P", "P1")) %>%
+  filter(taxa_level %in% c("P", "P1")) %>%
+  # Ordenar tax_name según total_hits para visualización
+  mutate(taxa_name = fct_reorder(taxa_name, total_hits), 
+         log_hits = log10(total_hits))
+
+# Crear heatmap
+ggplot(hits_plot, aes(x = read_id, y = taxa_name, fill = log_hits)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  theme_minimal() +
+  labs(x = "Read ID", y = "Taxa", fill = "Total Hits") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+```{r}
+hits_taxa_meta <- hits_taxa_meta |> select(read_id, taxa, 
+                         total_hits, taxa_num, 
+                         taxa_level, taxa_name, 
+                         alias, title) |> 
+  mutate(log_hits = log10(total_hits))
+
+# Filtrar solo P o P1
+hits_filtered <- hits_taxa_meta %>%
+  filter(taxa_level %in% c("P", "P1"))
+
+# Filtrar para 16S
+hits_16S <- hits_filtered %>%
+  filter(str_detect(alias, "16S"))
+
+# Filtrar para ITS
+hits_ITS <- hits_filtered %>%
+  filter(str_detect(alias, "ITS"))
+
+# Ahora puedes crear heatmaps separados, por ejemplo 16S:
+hits_16S_plot <- hits_16S %>%
+  mutate(taxa_name = fct_reorder(taxa_name, total_hits))
+
+ggplot(hits_16S_plot, aes(x = read_id, y = taxa_name, fill = total_hits)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  theme_minimal() +
+  labs(x = "Read ID", y = "Taxa", fill = "Total Hits", title = "16S") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Y otro heatmap para ITS
+hits_ITS_plot <- hits_ITS %>%
+  mutate(taxa_name = fct_reorder(taxa_name, total_hits))
+
+ggplot(hits_ITS_plot, aes(x = read_id, y = taxa_name, fill = total_hits)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "steelblue") +
+  theme_minimal() +
+  labs(x = "Read ID", y = "Taxa", fill = "Total Hits", title = "ITS") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
