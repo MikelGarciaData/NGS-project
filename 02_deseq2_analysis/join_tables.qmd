@@ -19,11 +19,27 @@ library(stringr)
 ```{r}
 bft <- read_csv("intermediate/BFT.csv")
 taxa <- read_csv("intermediate/taxa_keys.csv")
-meta <- read_csv2("metadata_full.csv")
+meta <- read_csv2("metadata_full.csv") |> 
+  mutate(scenario = str_sub(title, 1, 2)) |> 
+  mutate(
+    pot = case_when(
+      str_detect(title, "a") ~ "a",
+      str_detect(title, "b") ~ "b",
+      TRUE ~ NA_character_
+    )
+  )
 bft |> head()
 taxa |> head()
 meta |> head()
-write_csv(big_tibble, file = file.path("final", paste0("Final_ds_no_metadata", ".csv")))
+```
+
+```{r}
+
+```
+
+
+```{r}
+meta |> select(scenario) |> group_by(scenario) |> summarize(n = n())
 ```
 
 
@@ -40,12 +56,31 @@ hits_taxa_meta <- hits_with_taxa %>%
   left_join(meta, by = c("read_id" = "run_accession"))
 
 # Ver resultado
-head(hits_with_taxa)
-
-# Ver resultado
 hits_taxa_meta |> head()
 write_csv(hits_taxa_meta, file = file.path("final", paste0("final_dataset", ".csv")))
 ```
+
+```{r}
+hits_taxa_meta |> filter(read_id=="ERR13577028")
+```
+
+
+```{r}
+hits_taxa_meta |> 
+  filter(str_detect(alias, "16S")) |> 
+  group_by(taxa_level, taxa_name) |> 
+  summarize(total_hits=sum(total_hits)) |> 
+  distinct() |> 
+  arrange(desc(taxa_name))
+
+hits_taxa_meta |> 
+  filter(str_detect(alias, "ITS")) |> 
+  group_by(taxa_level, taxa_name) |> 
+  summarize(total_hits=sum(total_hits))|> 
+  distinct() |> 
+  arrange(desc(taxa_name))
+```
+
 
 ```{r}
 library(dplyr)
@@ -73,7 +108,7 @@ ggplot(hits_plot, aes(x = read_id, y = taxa_name, fill = log_hits)) +
 hits_taxa_meta <- hits_taxa_meta |> select(read_id, taxa, 
                          total_hits, taxa_num, 
                          taxa_level, taxa_name, 
-                         alias, title) |> 
+                         alias, title, scenario, pot) |> 
   mutate(log_hits = log10(total_hits))
 
 # Filtrar solo P o P1
@@ -98,16 +133,79 @@ ggplot(hits_16S_plot, aes(x = read_id, y = taxa_name, fill = total_hits)) +
   theme_minimal() +
   labs(x = "Read ID", y = "Taxa", fill = "Total Hits", title = "16S") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
+
+```{r}
+gross_total <- hits_taxa_meta |> 
+  filter(str_detect(alias, "ITS")) |>
+  filter(taxa_level %in% c("P", "P1")) |> 
+  select(total_hits) |> 
+  summarize(sum(total_hits))
+
+cat_total <- hits_taxa_meta |> 
+  filter(str_detect(alias, "ITS")) |> 
+  filter(taxa_level %in% c("P", "P1")) |> 
+  group_by(taxa_name) |> 
+  summarize(sum_total=sum(total_hits))
+```
+
+```{r}
+gross_total
+cat_total
+```
+
+
+```{r, fig.width=12, fig.height=28}
 # Y otro heatmap para ITS
 hits_ITS_plot <- hits_ITS %>%
-  mutate(taxa_name = fct_reorder(taxa_name, total_hits))
+  left_join(cat_total, by = "taxa_name") |> 
+  mutate(taxa_name = fct_reorder(taxa_name, total_hits),
+         abundance = total_hits/sum_total*100)
 
-ggplot(hits_ITS_plot, aes(x = read_id, y = taxa_name, fill = total_hits)) +
-  geom_tile(color = "white") +
-  scale_fill_gradient(low = "white", high = "steelblue") +
-  theme_minimal() +
-  labs(x = "Read ID", y = "Taxa", fill = "Total Hits", title = "ITS") +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+plot_hits_heatmap <- function(data, title = "ITS") {
+  ggplot(data, aes(x = read_id, y = taxa_name, fill = abundance)) +
+    geom_tile(color = "white") +
+    scale_fill_gradient(low = "red", high = "green") +
+    theme_minimal() +
+    labs(
+      x = "Read ID",
+      y = "Taxa",
+      fill = "Abundance (%)",
+      title = title
+    ) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+}
+
+library(patchwork)
+
+p1 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Bm") & pot %in% c("a")), "Bm pot a")
+p2 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Bm") & pot %in% c("b")), "Bm pot b")
+p3 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Mb") & pot %in% c("a")), "Mb pot a")
+p4 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Mb") & pot %in% c("b")), "Mb pot b")
+p5 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Mn") & pot %in% c("a")), "Mn pot a")
+p6 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Mn") & pot %in% c("b")), "Mn pot b")
+p7 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Mp") & pot %in% c("a")), "Mp pot a")
+p8 <- plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("Mp") & pot %in% c("b")), "Mp pot b")
+
+(p1 + p2 +
+ p3 + p4 +
+ p5 + p6 +
+ p7 + p8) +
+  plot_layout(nrow = 4, ncol = 2)
+# plot_hits_heatmap(hits_ITS_plot |> filter(scenario %in% c("cc")), "cc")
+```
+
+```{r}
+p1
+p2
+p3
+p4
+p5
+p6
+p7
+p8
 ```
 
